@@ -22,5 +22,11 @@ public interface RiotAPI {
     @GET("/observer-mode/rest/consumer/getSpectatorGameInfo/{region}/{summonerId}")
     Call<Map> getCurrentMatch(@Path("region") String region, @Path("summonerId") String summonerId, @Query("api_key") String api_key);
 
+    // Get recent games by summonerID
+    @GET("/api/lol/{region}/v1.3/game/by-summoner/{summonerId}/recent")
+    Call<Map> getRecentGames(@Path("region") String region, @Path("summonerId") String summonerId, @Query("api_key") String api_key);
 
+    // Get summoner Tier and division
+    @GET("/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}/entry")
+    Call<Map> getRanked(@Path("region") String region, @Path("summonerIds") String summonerIds, @Query("api_key") String api_key);
 }
