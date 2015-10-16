@@ -17,7 +17,6 @@ public interface RiotAPI {
     @GET("/api/lol/euw/v1.4/summoner/by-name/{summonerNames}")
     Call<Map> getSummoner(@Path("summonerNames") String summonername, @Query("api_key") String api_key);
 
-
     // get current-match by summonerid
     @GET("/observer-mode/rest/consumer/getSpectatorGameInfo/{region}/{summonerId}")
     Call<Map> getCurrentMatch(@Path("region") String region, @Path("summonerId") String summonerId, @Query("api_key") String api_key);
