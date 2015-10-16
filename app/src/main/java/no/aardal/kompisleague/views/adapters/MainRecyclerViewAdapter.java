@@ -59,6 +59,8 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     private void getSummonerIcon(Double summonerIcon, ViewHolder holder) {
         String profileUrl = Config.profilePicUrl + summonerIcon.intValue() + ".png";
         Picasso.with(mContext).load(profileUrl).into(holder.profilePicture);
+
+        
     }
 
 

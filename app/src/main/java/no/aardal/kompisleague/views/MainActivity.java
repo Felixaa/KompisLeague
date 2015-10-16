@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Context self = this;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipreRefresh;
     private MainRecyclerViewAdapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
@@ -66,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
+        swipreRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipreRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipreRefresh.setRefreshing(true);
+                requestData();
+            }
+        });
 
         requestData();
 
@@ -79,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         RiotAPI riot = retrofit.create(RiotAPI.class);
-        String summonername = "felixaa,dugthethug,flày,reddet,Big daddy Moux";
+        final String[] summonernames = {"felixaa","dugthethug","flày","reddet","BigDaddyMoux","vikathug"};
 
-        Call<Map> call = riot.getSummoner(summonername, Config.urlParamKey);
+        Call<Map> call = riot.getSummoner(getQueryParamsFromArray(summonernames), Config.urlParamKey);
         call.enqueue(new Callback<Map>() {
             @Override
             public void onResponse(Response<Map> response, Retrofit retrofit) {
@@ -90,34 +101,20 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("RESPONSE RAW: ", response.raw().toString());
                 Log.d("RESPONSE CODE: ", res.toString());
 
-
-                Map item = (Map)response.body().get("felixaa");
-                Map item2 = (Map)response.body().get("dugthethug");
-                Map item3 = (Map)response.body().get("flày");
-                Map item4 = (Map)response.body().get("reddet");
-                Map item5 = (Map)response.body().get("bigdaddymoux");
-
-                Summoner felixaa = new Summoner().build(item);
-                Summoner dug = new Summoner().build(item2);
-                Summoner flay = new Summoner().build(item3);
-                Summoner reddet = new Summoner().build(item4);
-                Summoner moux = new Summoner().build(item5);
-
-
                 summoners = new ArrayList<>();
-                summoners.add(felixaa);
-                summoners.add(dug);
-                summoners.add(flay);
-                summoners.add(reddet);
-                summoners.add(moux);
-
-
-
-
+                for (String name : summonernames) {
+                    Map item = (Map) response.body().get(name);
+                    Summoner summoner = new Summoner().build(item);
+                    summoners.add(summoner);
+                }
 
 
                 recyclerAdapter = new MainRecyclerViewAdapter(summoners, self);
                 recyclerView.setAdapter(recyclerAdapter);
+
+                if (swipreRefresh.isRefreshing()) {
+                    swipreRefresh.setRefreshing(false);
+                }
 
 
             }
@@ -128,6 +125,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String getQueryParamsFromArray(String[] summoners) {
+        StringBuilder build = new StringBuilder();
+        String param;
+        for (String name : summoners) {
+            build.append(name + ",");
+        }
+        param = build.toString();
+        return param;
     }
 
     @Override
