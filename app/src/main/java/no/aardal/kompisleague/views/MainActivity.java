@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         RiotAPI riot = retrofit.create(RiotAPI.class);
-        String summonername = "felixaa,dugthethug,flày,reddet";
+        String summonername = "felixaa,dugthethug,flày,reddet,Big daddy Moux";
 
         Call<Map> call = riot.getSummoner(summonername, Config.urlParamKey);
         call.enqueue(new Callback<Map>() {
@@ -95,11 +95,13 @@ public class MainActivity extends AppCompatActivity {
                 Map item2 = (Map)response.body().get("dugthethug");
                 Map item3 = (Map)response.body().get("flày");
                 Map item4 = (Map)response.body().get("reddet");
+                Map item5 = (Map)response.body().get("bigdaddymoux");
 
                 Summoner felixaa = new Summoner().build(item);
                 Summoner dug = new Summoner().build(item2);
                 Summoner flay = new Summoner().build(item3);
                 Summoner reddet = new Summoner().build(item4);
+                Summoner moux = new Summoner().build(item5);
 
 
                 summoners = new ArrayList<>();
@@ -107,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
                 summoners.add(dug);
                 summoners.add(flay);
                 summoners.add(reddet);
+                summoners.add(moux);
+
+
+
+
 
 
                 recyclerAdapter = new MainRecyclerViewAdapter(summoners, self);

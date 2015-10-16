@@ -14,27 +14,43 @@
         android:layout_gravity="center"
         android:layout_margin="7dp"
         app:cardUseCompactPadding="true"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardBackgroundColor="#673AB7">
+        card_view:cardCornerRadius="4dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:padding="10dp"
             android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/profile_picture"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:layout_marginLeft="16dp"
+                app:background="@android:color/holo_red_dark"
                 android:layout_centerVertical="true" />
 
-            <TextView
-                android:id="@+id/cardview_text"
-                android:textColor="@android:color/white"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="HALLA DAMER!!!!"/>
+                android:layout_margin="5dp"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/profile_picture">
+
+                <TextView
+                    android:id="@+id/cardview_text"
+                    android:textSize="24dp"
+                    android:textColor="@color/textColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:text="DugTheThug"/>
+
+                <TextView
+                    android:id="@+id/summoner_level"
+                    android:text="30"
+                    android:textColor="@color/secondTextColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
