@@ -1,5 +1,6 @@
 package no.aardal.kompisleague.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView text;
     private ArrayList<Summoner> summoners;
+    private Context self = this;
 
     private RecyclerView recyclerView;
     private MainRecyclerViewAdapter recyclerAdapter;
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //requestData();
+
     }
 
     private void initViews() {
@@ -65,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
 
-        recyclerAdapter = new MainRecyclerViewAdapter(Config.getTestDator(), this);
-        recyclerView.setAdapter(recyclerAdapter);
+        requestData();
 
     }
 
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         RiotAPI riot = retrofit.create(RiotAPI.class);
-        String summonername = "felixaa,dugthethug";
+        String summonername = "felixaa,dugthethug,flày,reddet";
 
         Call<Map> call = riot.getSummoner(summonername, Config.urlParamKey);
         call.enqueue(new Callback<Map>() {
@@ -89,13 +90,28 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("RESPONSE RAW: ", response.raw().toString());
                 Log.d("RESPONSE CODE: ", res.toString());
 
-                Map item = (Map)response.body().get("felixaa");
-                Summoner felixaa = new Summoner().build(item);
-                Log.d("FELIXAXAXAAXAX", felixaa.name);
-                Log.d("Profilepic", felixaa.profileIconId.toString());
 
-                /*Map<String, String> result = (Map)response.body().get("felixaa");
-                Log.d("RESUUUULT: ", result.get("name"));*/
+                Map item = (Map)response.body().get("felixaa");
+                Map item2 = (Map)response.body().get("dugthethug");
+                Map item3 = (Map)response.body().get("flày");
+                Map item4 = (Map)response.body().get("reddet");
+
+                Summoner felixaa = new Summoner().build(item);
+                Summoner dug = new Summoner().build(item2);
+                Summoner flay = new Summoner().build(item3);
+                Summoner reddet = new Summoner().build(item4);
+
+
+                summoners = new ArrayList<>();
+                summoners.add(felixaa);
+                summoners.add(dug);
+                summoners.add(flay);
+                summoners.add(reddet);
+
+
+                recyclerAdapter = new MainRecyclerViewAdapter(summoners, self);
+                recyclerView.setAdapter(recyclerAdapter);
+
 
             }
 

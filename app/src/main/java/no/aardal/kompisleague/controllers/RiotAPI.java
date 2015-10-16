@@ -13,6 +13,9 @@ import retrofit.http.Query;
 public interface RiotAPI {
 
 
+    // get summoner by summonername
     @GET("/api/lol/euw/v1.4/summoner/by-name/{summonerNames}")
     Call<Map> getSummoner(@Path("summonerNames") String summonername, @Query("api_key") String api_key);
+
+
 }

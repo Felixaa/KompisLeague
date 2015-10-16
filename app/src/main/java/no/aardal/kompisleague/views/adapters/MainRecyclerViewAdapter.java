@@ -10,17 +10,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import no.aardal.kompisleague.R;
+import no.aardal.kompisleague.models.Summoner;
 
 /**
  * Created by Chris on 10/7/2015.
  */
 public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ViewHolder> {
 
-    ArrayList<String> testData;
+    ArrayList<Summoner> summoners;
     Context mContext;
 
-    public MainRecyclerViewAdapter(ArrayList<String> testData, Context context) {
-        this.testData = testData;
+    public MainRecyclerViewAdapter(ArrayList<Summoner> summoners, Context context) {
+        this.summoners = summoners;
         this.mContext = context;
     }
 
@@ -35,13 +36,13 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.helloLadies.setText(testData.get(position));
+        holder.helloLadies.setText(summoners.get(position).name);
     }
 
 
     @Override
     public int getItemCount() {
-        return testData.size();
+        return summoners.size();
     }
 
 
