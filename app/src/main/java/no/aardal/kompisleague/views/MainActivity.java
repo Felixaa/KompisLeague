@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import no.aardal.kompisleague.R;
@@ -89,24 +90,52 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        RiotAPI riot = retrofit.create(RiotAPI.class);
-        final String[] summonernames = {"felixaa","dugthethug","flày","reddet","BigDaddyMoux","vikathug"};
+        final RiotAPI riot = retrofit.create(RiotAPI.class);
+        final String[] summonernames = {"felixaa","dugthethug","flày","reddet","vikathug"};
+
+
 
         Call<Map> call = riot.getSummoner(getQueryParamsFromArray(summonernames), Config.urlParamKey);
         call.enqueue(new Callback<Map>() {
             @Override
             public void onResponse(Response<Map> response, Retrofit retrofit) {
-                Integer res = response.code();
+                final Integer res = response.code();
                 Log.d("RESPONSE MESSAGE: ", response.message());
                 Log.d("RESPONSE RAW: ", response.raw().toString());
                 Log.d("RESPONSE CODE: ", res.toString());
 
+
+                HashMap<String, Double> summonerIdMap = new HashMap<>();
                 summoners = new ArrayList<>();
                 for (String name : summonernames) {
                     Map item = (Map) response.body().get(name);
                     Summoner summoner = new Summoner().build(item);
+                    summonerIdMap.put(summoner.name, summoner.id);
                     summoners.add(summoner);
                 }
+
+
+                ArrayList<Double> summonerIdsList = new ArrayList<>(summonerIdMap.values());
+
+
+
+                Call<Map> mapCall = riot.getRanked("euw", getSummoneridsFromList(summonerIdsList), Config.urlParamKey);
+                mapCall.enqueue(new Callback<Map>() {
+                    @Override
+                    public void onResponse(Response<Map> response, Retrofit retrofit) {
+                        Integer resp = response.code();
+                        Log.d("RESPONSE MESSAGE: ", response.message());
+                        Log.d("RESPONSE RAW: ", response.raw().toString());
+                        Log.d("RESPONSE CODE: ", resp.toString());
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                    }
+                });
 
 
                 recyclerAdapter = new MainRecyclerViewAdapter(summoners, self, getSupportFragmentManager());
@@ -129,13 +158,22 @@ public class MainActivity extends AppCompatActivity {
 
     private String getQueryParamsFromArray(String[] summoners) {
         StringBuilder build = new StringBuilder();
-        String param;
-        for (String name : summoners) {
-            build.append(name + ",");
+        for (String summoner : summoners) {
+            build.append(summoner + ",");
         }
-        param = build.toString();
+        return build.length() > 0 ? build.substring(0, build.length() - 1): "";
+    }
+
+    private String getSummoneridsFromList(ArrayList<Double> summonerIds) {
+        StringBuilder builder = new StringBuilder();
+        String param;
+            for (Double id : summonerIds) {
+                builder.append(id.longValue() + ",");
+            }
+        param = builder.toString();
         return param;
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

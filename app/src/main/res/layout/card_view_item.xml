@@ -60,10 +60,31 @@
             </LinearLayout>
 
 
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/league_tier_logo"
+                android:src="@drawable/ic_diamond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:id="@+id/league_tier_text"
+                android:text="Platinum III"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
             <Button
                 android:id="@+id/sms_button"
                 android:text="SMS"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
