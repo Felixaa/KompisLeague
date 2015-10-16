@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         final RiotAPI riot = retrofit.create(RiotAPI.class);
-        final String[] summonernames = {"felixaa","dugthethug","flày","reddet","vikathug"};
+        final String[] summonernames = {"felixaa","dugthethug","flày","reddet","vikathug","bruh","jussatussa"};
 
 
 
