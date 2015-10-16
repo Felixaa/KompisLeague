@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                recyclerAdapter = new MainRecyclerViewAdapter(summoners, self);
+                recyclerAdapter = new MainRecyclerViewAdapter(summoners, self, getSupportFragmentManager());
                 recyclerView.setAdapter(recyclerAdapter);
 
                 if (swipreRefresh.isRefreshing()) {
