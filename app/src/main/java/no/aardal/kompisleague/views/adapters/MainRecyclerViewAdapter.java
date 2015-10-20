@@ -16,9 +16,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import no.aardal.kompisleague.R;
+import no.aardal.kompisleague.models.League;
 import no.aardal.kompisleague.models.Summoner;
 import no.aardal.kompisleague.utils.Config;
 import no.aardal.kompisleague.views.SmsDialogFragment;
@@ -29,10 +32,15 @@ import no.aardal.kompisleague.views.SmsDialogFragment;
 public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ViewHolder> {
 
     ArrayList<Summoner> summoners;
+    ArrayList<League> leagues;
     FragmentManager mManager;
     Context mContext;
 
-    public MainRecyclerViewAdapter(ArrayList<Summoner> summoners, Context context, FragmentManager manager) {
+    public MainRecyclerViewAdapter(ArrayList<Summoner> summoners,
+                                   ArrayList<League> leagues,
+                                   Context context,
+                                   FragmentManager manager) {
+        this.leagues = leagues;
         this.summoners = summoners;
         this.mContext = context;
         this.mManager = manager;
@@ -56,13 +64,15 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.helloLadies.setText(summoners.get(position).name);
 
-
         if (summoners.get(position).profileIconId != null) {
             getSummonerIcon(summoners.get(position).profileIconId, holder);
         }
 
+
         if (summoners.get(position).phoneNr != null) {
             holder.ingameStatus.setText(summoners.get(position).phoneNr);
+        } else {
+            holder.ingameStatus.setText("NO PHONENR");
         }
 
 
@@ -94,6 +104,8 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
         public TextView helloLadies;
         public ImageView profilePicture;
+        public ImageView leagueTierLogo;
+        public TextView leagueTierText;
         public TextView ingameStatus;
         public Button sendSmsButton;
 
@@ -106,6 +118,8 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
             profilePicture = (ImageView)itemView.findViewById(R.id.profile_picture);
             ingameStatus = (TextView)itemView.findViewById(R.id.ingame_status_text);
             sendSmsButton = (Button)itemView.findViewById(R.id.sms_button);
+            leagueTierLogo = (ImageView)itemView.findViewById(R.id.league_tier_logo);
+            leagueTierText = (TextView)itemView.findViewById(R.id.league_tier_text);
             sendSmsButton.setOnClickListener(this);
         }
 

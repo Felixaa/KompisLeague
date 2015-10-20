@@ -22,6 +22,7 @@ import java.util.Map;
 
 import no.aardal.kompisleague.R;
 import no.aardal.kompisleague.controllers.RiotAPI;
+import no.aardal.kompisleague.models.League;
 import no.aardal.kompisleague.models.Summoner;
 import no.aardal.kompisleague.utils.Config;
 import no.aardal.kompisleague.views.adapters.MainRecyclerViewAdapter;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView text;
     private ArrayList<Summoner> summoners;
+    private ArrayList<League> leagues;
     private Context self = this;
 
     private RecyclerView recyclerView;
@@ -91,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         final RiotAPI riot = retrofit.create(RiotAPI.class);
-        final String[] summonernames = {"felixaa","dugthethug","flày","reddet","vikathug","bruh","jussatussa"};
 
 
 
-        Call<Map> call = riot.getSummoner(getQueryParamsFromArray(summonernames), Config.urlParamKey);
+
+        Call<Map> call = riot.getSummoner(getQueryParamsFromArray(Config.summonernames), Config.urlParamKey);
         call.enqueue(new Callback<Map>() {
             @Override
             public void onResponse(Response<Map> response, Retrofit retrofit) {
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
                 HashMap<String, Double> summonerIdMap = new HashMap<>();
                 summoners = new ArrayList<>();
-                for (String name : summonernames) {
+                for (String name : Config.summonernames) {
                     Map item = (Map) response.body().get(name);
                     Summoner summoner = new Summoner().build(item);
                     summonerIdMap.put(summoner.name, summoner.id);
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                ArrayList<Double> summonerIdsList = new ArrayList<>(summonerIdMap.values());
+                final ArrayList<Double> summonerIdsList = new ArrayList<>(summonerIdMap.values());
 
 
 
@@ -129,6 +131,23 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("RESPONSE CODE: ", resp.toString());
 
 
+                        leagues = new ArrayList<>();
+                        for (Double id : summonerIdsList) {
+                            Long idL = id.longValue();
+                            ArrayList<Map> item = (ArrayList<Map>) response.body().get(idL.toString());
+                            League league = new League().build(item.get(0));
+                            leagues.add(league);
+                        }
+
+
+                        recyclerAdapter = new MainRecyclerViewAdapter(summoners, leagues, self, getSupportFragmentManager());
+                        recyclerView.setAdapter(recyclerAdapter);
+
+                        if (swipreRefresh.isRefreshing()) {
+                            swipreRefresh.setRefreshing(false);
+                        }
+
+
                     }
 
                     @Override
@@ -137,13 +156,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
-                recyclerAdapter = new MainRecyclerViewAdapter(summoners, self, getSupportFragmentManager());
-                recyclerView.setAdapter(recyclerAdapter);
-
-                if (swipreRefresh.isRefreshing()) {
-                    swipreRefresh.setRefreshing(false);
-                }
 
 
             }
@@ -171,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.append(id.longValue() + ",");
             }
         param = builder.toString();
+        Log.d("PARAMS:", param);
         return param;
     }
 

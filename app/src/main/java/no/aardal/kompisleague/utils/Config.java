@@ -13,14 +13,9 @@ public class Config {
     public static final String profilePicUrl = "http://ddragon.leagueoflegends.com/cdn/5.20.1/img/profileicon/";
     public static final String splashArtUrl = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
     public static final String soloQueue = "RANKED_SOLO_5x5";
+    public static final String[] summonernames = {"felixaa","dugthethug","flày","reddet","vikathug","bruh","jussatussa"};
 
 
-    public static ArrayList<String> getTestDator() {
-        ArrayList<String> data = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            data.add("WILLIAM");
-        }
-        return data;
-    }
+
 
 }

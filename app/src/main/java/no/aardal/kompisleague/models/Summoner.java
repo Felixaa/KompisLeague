@@ -25,7 +25,19 @@ public class Summoner {
                     phoneNr = "96017672";
                     break;
                 case "DugTheThug":
-                    phoneNr = "96017672";
+                    phoneNr = "98459121";
+                    break;
+                case "Bruh":
+                    phoneNr = "94831272";
+                    break;
+                case "Reddet":
+                    phoneNr = "45630516";
+                    break;
+                case "Flày":
+                    phoneNr = "48435835";
+                    break;
+                case "vikathug":
+                    phoneNr = "98713452";
                     break;
             }
             this.profileIconId = (Double)map.get("profileIconId");
