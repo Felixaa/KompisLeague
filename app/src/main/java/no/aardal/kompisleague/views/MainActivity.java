@@ -3,9 +3,9 @@ package no.aardal.kompisleague.views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +32,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddFriendDialog.NoticeDialogListener {
 
     private TextView text;
     private ArrayList<Summoner> summoners;
@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 final ArrayList<Double> summonerIdsList = new ArrayList<>(summonerIdMap.values());
 
 
-
                 Call<Map> mapCall = riot.getRanked("euw", getSummoneridsFromList(summonerIdsList), Config.urlParamKey);
                 mapCall.enqueue(new Callback<Map>() {
                     @Override
@@ -155,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-
 
 
             }
@@ -208,5 +206,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPositiveDialogClick(AppCompatDialogFragment dialog) {
+        Toast.makeText(this, "HELLO IT WORKS", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNegativeDialogClick(AppCompatDialogFragment dialog) {
+        Toast.makeText(this, "HELLO IT WORKS NEGATIVE", Toast.LENGTH_SHORT).show();
     }
 }
