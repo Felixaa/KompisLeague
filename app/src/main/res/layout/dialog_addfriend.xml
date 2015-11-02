@@ -4,14 +4,17 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <EditText
+        android:id="@+id/addSummonerEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:hint="Summonername"/>
+        android:hint="Summoner"/>
     <EditText
+        android:id="@+id/addPhoneNumberEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:inputType="phone"
         android:hint="Phone"/>
 
 </LinearLayout>

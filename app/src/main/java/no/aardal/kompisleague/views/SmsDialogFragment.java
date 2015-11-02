@@ -44,7 +44,7 @@ public class SmsDialogFragment extends AppCompatDialogFragment {
 
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNr, null, "YO! Joine games eller?", null, null);
+            smsManager.sendTextMessage(phoneNr, null, "Yo! Joine games eller? Sendt via KompisLeague", null, null);
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Failed to send message", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
