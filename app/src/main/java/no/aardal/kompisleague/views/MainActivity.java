@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
 
     private TextView text;
     private ArrayList<Summoner> summoners;
-    private ArrayList<League> leagues;
     private Context self = this;
 
     private RecyclerView recyclerView;
@@ -130,16 +129,16 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
                         Log.d("RESPONSE CODE: ", resp.toString());
 
 
-                        leagues = new ArrayList<>();
-                        for (Double id : summonerIdsList) {
-                            Long idL = id.longValue();
-                            ArrayList<Map> item = (ArrayList<Map>) response.body().get(idL.toString());
+                        for (Summoner summoner : summoners) {
+
+                            ArrayList<Map> item = (ArrayList<Map>) response.body().get(""+summoner.id.intValue());
+                            Log.d("SUMMONER ID: ", ""+summoner.id.intValue());
                             League league = new League().build(item.get(0));
-                            leagues.add(league);
+                            summoner.league = league;
                         }
 
 
-                        recyclerAdapter = new MainRecyclerViewAdapter(summoners, leagues, self, getSupportFragmentManager());
+                        recyclerAdapter = new MainRecyclerViewAdapter(summoners, self, getSupportFragmentManager());
                         recyclerView.setAdapter(recyclerAdapter);
 
                         if (swipreRefresh.isRefreshing()) {

@@ -37,10 +37,8 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     Context mContext;
 
     public MainRecyclerViewAdapter(ArrayList<Summoner> summoners,
-                                   ArrayList<League> leagues,
                                    Context context,
                                    FragmentManager manager) {
-        this.leagues = leagues;
         this.summoners = summoners;
         this.mContext = context;
         this.mManager = manager;
@@ -63,6 +61,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.helloLadies.setText(summoners.get(position).name);
+        holder.leagueTierText.setText(summoners.get(position).league.tier);
 
         if (summoners.get(position).profileIconId != null) {
             getSummonerIcon(summoners.get(position).profileIconId, holder);

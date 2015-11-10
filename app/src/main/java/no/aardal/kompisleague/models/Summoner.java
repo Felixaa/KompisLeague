@@ -13,6 +13,7 @@ public class Summoner {
     public Double summonerLevel;
     public Double revisionDate;
     public String phoneNr;
+    public League league;
 
 
     public Summoner build(Map map) {
