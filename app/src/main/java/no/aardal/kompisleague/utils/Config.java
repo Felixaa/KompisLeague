@@ -13,6 +13,11 @@ public class Config {
     public static final String profilePicUrl = "http://ddragon.leagueoflegends.com/cdn/5.20.1/img/profileicon/";
     public static final String splashArtUrl = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
     public static final String soloQueue = "RANKED_SOLO_5x5";
+
+    //SharedPrefs
+    public static final String PREFS_NAME = "myPrefs";
+
+
     public static final String[] summonernames = {"felixaa","dugthethug","flày","reddet","vikathug","bruh","jussatussa"};
 
 

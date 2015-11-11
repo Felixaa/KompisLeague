@@ -60,8 +60,31 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        String leagueTier = summoners.get(position).league.tier;
+        String division = summoners.get(position).league.entries.get(0).division;
+
         holder.helloLadies.setText(summoners.get(position).name);
-        holder.leagueTierText.setText(summoners.get(position).league.tier);
+        holder.leagueTierText.setText(leagueTier + " " + division);
+
+        switch (summoners.get(position).league.tier) {
+            case "DIAMOND":
+                holder.leagueTierLogo.setImageResource(R.drawable.ic_diamond);
+                break;
+            case "PLATINUM":
+                holder.leagueTierLogo.setImageResource(R.drawable.ic_platinum);
+                break;
+            case "GOLD":
+                holder.leagueTierLogo.setImageResource(R.drawable.ic_gold);
+                break;
+            case "SILVER":
+                holder.leagueTierLogo.setImageResource(R.drawable.ic_silver);
+                break;
+            case "BROZE":
+                holder.leagueTierLogo.setImageResource(R.drawable.ic_bronze);
+                break;
+        }
+
+
 
         if (summoners.get(position).profileIconId != null) {
             getSummonerIcon(summoners.get(position).profileIconId, holder);

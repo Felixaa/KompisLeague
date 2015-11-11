@@ -1,7 +1,9 @@
 package no.aardal.kompisleague.views;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import no.aardal.kompisleague.R;
@@ -25,6 +28,7 @@ import no.aardal.kompisleague.controllers.RiotAPI;
 import no.aardal.kompisleague.models.League;
 import no.aardal.kompisleague.models.Summoner;
 import no.aardal.kompisleague.utils.Config;
+import no.aardal.kompisleague.utils.TinyDB;
 import no.aardal.kompisleague.views.adapters.MainRecyclerViewAdapter;
 import retrofit.Call;
 import retrofit.Callback;
@@ -38,16 +42,29 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
     private ArrayList<Summoner> summoners;
     private Context self = this;
 
+    TinyDB tinyDB;
+    ArrayList<String> staticSummoners = new ArrayList<>();
+
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipreRefresh;
     private MainRecyclerViewAdapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tinyDB = new TinyDB(this);
+
+        if (firstTimeLaunching()) {
+            storeSummonerListToDb();
+        } else {
+            getSummonerListFromDb();
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -84,6 +101,32 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
 
     }
 
+    private boolean firstTimeLaunching() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (settings.getBoolean("first_time", true)) {
+            settings.edit().putBoolean("first_time", false).apply();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void storeSummonerListToDb() {
+        for(String summoner : Config.summonernames) {
+            staticSummoners.add(summoner);
+        }
+        tinyDB.putListString("summoners", staticSummoners);
+    }
+
+    private void getSummonerListFromDb() {
+        if (tinyDB.getListString("summoners") != null) {
+            staticSummoners = tinyDB.getListString("summoners");
+        } else {
+            storeSummonerListToDb();
+        }
+    }
+
+
     private void requestData() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -96,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
 
 
 
-        Call<Map> call = riot.getSummoner(getQueryParamsFromArray(Config.summonernames), Config.urlParamKey);
+        Call<Map> call = riot.getSummoner(getQueryParamsFromArray(staticSummoners), Config.urlParamKey);
         call.enqueue(new Callback<Map>() {
             @Override
             public void onResponse(Response<Map> response, Retrofit retrofit) {
@@ -108,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
 
                 HashMap<String, Double> summonerIdMap = new HashMap<>();
                 summoners = new ArrayList<>();
-                for (String name : Config.summonernames) {
+                for (String name : staticSummoners) {
                     Map item = (Map) response.body().get(name);
                     Summoner summoner = new Summoner().build(item);
                     summonerIdMap.put(summoner.name, summoner.id);
@@ -130,9 +173,8 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
 
 
                         for (Summoner summoner : summoners) {
-
-                            ArrayList<Map> item = (ArrayList<Map>) response.body().get(""+summoner.id.intValue());
-                            Log.d("SUMMONER ID: ", ""+summoner.id.intValue());
+                            ArrayList<Map> item = (ArrayList<Map>) response.body().get("" + summoner.id.intValue());
+                            Log.d("SUMMONER ID: ", "" + summoner.id.intValue());
                             League league = new League().build(item.get(0));
                             summoner.league = league;
                         }
@@ -165,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
         });
     }
 
-    private String getQueryParamsFromArray(String[] summoners) {
+    private String getQueryParamsFromArray(ArrayList<String> summoners) {
         StringBuilder build = new StringBuilder();
         for (String summoner : summoners) {
             build.append(summoner + ",");
@@ -207,9 +249,11 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onPositiveDialogClick(AppCompatDialogFragment dialog) {
-        Toast.makeText(this, "HELLO IT WORKS", Toast.LENGTH_SHORT).show();
+    public void onPositiveDialogClick(AppCompatDialogFragment dialog, String summoner, String phoneNumber) {
+        staticSummoners.add(summoner);
+        tinyDB.putListString("summoners", staticSummoners);
     }
 
     @Override

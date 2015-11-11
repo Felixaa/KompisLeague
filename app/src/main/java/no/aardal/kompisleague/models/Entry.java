@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by chrisaardal on 16/10/15.
  */
-public class Entries implements Serializable {
+public class Entry implements Serializable {
 
     public String division;
     public String playerOrTeamName;
@@ -15,7 +15,7 @@ public class Entries implements Serializable {
     public Double losses;
 
 
-    public Entries build(Map map) {
+    public Entry build(Map map) {
         if (map != null) {
             this.division =(String)map.get("division");
             this.playerOrTeamId = (String)map.get("playerOrTeamId");
