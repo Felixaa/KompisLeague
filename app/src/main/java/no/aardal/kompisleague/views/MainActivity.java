@@ -1,10 +1,14 @@
 package no.aardal.kompisleague.views;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
     private TextView text;
     private ArrayList<Summoner> summoners;
     private Context self = this;
+    private int MY_PERMISSIONS_SEND_SMS;
 
     TinyDB tinyDB;
     ArrayList<String> staticSummoners = new ArrayList<>();
@@ -59,11 +64,15 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
 
         tinyDB = new TinyDB(this);
 
+        checkPermission();
+
         if (firstTimeLaunching()) {
             storeSummonerListToDb();
         } else {
             getSummonerListFromDb();
         }
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -249,6 +258,22 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialog.N
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+
+                Toast.makeText(this, "Show explaination", Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_SEND_SMS);
+            }
+        }
+    }
 
     @Override
     public void onPositiveDialogClick(AppCompatDialogFragment dialog, String summoner, String phoneNumber) {
